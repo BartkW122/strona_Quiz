@@ -19,6 +19,7 @@ $(document).ready(function(){
                     input.setAttribute("type", "checkbox");
                     input.setAttribute("name", `odpowiedz-${key2}`);
                     input.setAttribute("id", `id-${key2}-${index}`);
+                    input.setAttribute("value", `${key2}`);
                     input.value = element;
 
                     label.setAttribute("for", `id-${key2}-${index}`);
@@ -27,6 +28,7 @@ $(document).ready(function(){
                     div.appendChild(input);
                     div.appendChild(label);
                     div.appendChild(br);
+                    console.log(div)
                 });
 
                 document.body.appendChild(div);
