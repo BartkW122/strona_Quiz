@@ -11,6 +11,8 @@ function losowanie_indeksow() {
   return losowane_indexy;
 }
 
+let tab_indexy = losowanie_indeksow();
+
 function sprawdzenie_ilosci_odpowiedzi(dlugosc){
     if(dlugosc == 1){
         return true
@@ -19,12 +21,13 @@ function sprawdzenie_ilosci_odpowiedzi(dlugosc){
         return false
     }
 }
+
 function  obsluga_button(){
 
     let ilosc_klik = 1;
     $("button.next").on("click",function(){
         console.log(ilosc_klik);
-        if(ilosc_klik<=20){
+        if(ilosc_klik<20){
 
             ilosc_klik ++;
 
@@ -49,23 +52,116 @@ function  obsluga_button(){
             })
 
         }
-        console.log(this)
+        //console.log($(this).parent().hide())
     })
 }
+function przyrownanie_tablic(tab1,tab2){
+    if (tab1.length !== tab2.length) {
+        return false;
+    }
 
-function obsluga_input(tab){
-    $("input").on("click",function(){
-        console.log($(this))
-        if(!tab.includes($(this))){
-            tab.push($(this));
+    return tab1.every((value, index) => {
+        return value === tab2[index];
+    });
+}
+function sprawdzanie_odpowiedzi(tab_id){
+
+    $.getJSON('pytania.json', function(data) {
+            let pytania = data.quiz;
+            let szukane_question_id;
+            let wynik = null;
+
+            if(tab_id.length > 1){
+                let tab_ids = [];
+
+                tab_id.forEach(item=>{
+                    szukane_question_id = parseInt(item.key);
+                    tab_ids.push(parseInt(item.value))
+                })
+
+                 pytania.forEach(item=>{
+                    if(item.question_id == szukane_question_id){
+                        console.log(item);
+                        console.log("answer =>"+item.correct_answers);
+                        console.log("tab =>"+tab_ids)
+
+                        if(przyrownanie_tablic(item.correct_answers,tab_ids)){
+                            wynik = {
+                                question_id:szukane_question_id,
+                                zgodnosc:true
+                            };
+                        }else{
+                            wynik = {
+                                question_id:szukane_question_id,
+                                zgodnosc:false
+                            };
+                        }
+
+                    }
+                })
+                
+            }else{
+                let sprawdzana_odp;
+
+                tab_id.forEach(item=>{
+
+                    szukane_question_id = parseInt(item.key);
+                    sprawdzana_odp = parseInt(item.value);
+                    
+                })
+
+                pytania.forEach(item=>{
+                    if(item.question_id == szukane_question_id){
+                        console.log(item);
+                        console.log(item.correct_answers);
+                        if(item.correct_answers == sprawdzana_odp){
+                            wynik = {
+                                question_id:szukane_question_id,
+                                zgodnosc:true
+                            };
+                        }else{
+                            wynik = {
+                                question_id:szukane_question_id,
+                                zgodnosc:false
+                            };
+                        }
+                    }
+                })
+                
+            }
+            
+        return wynik;
+    });
+}
+
+function obsluga_input(){
+    let tab_odpowedzi=[];
+    let tablica_sprawdzonych_odpowiedzi = [];
+    let temp;
+    $("button.next").on("click",function(){
+        for(let i  = 0;i<4;i++){
+            if($(this).parent().children(".odpowiedzi")[i].checked){
+                console.log($(this).parent().children(".odpowiedzi")[i]);
+                temp ={
+                    "key":$(this).parent().children(".odpowiedzi")[i].id.split("-")[1],
+                    "value":$(this).parent().children(".odpowiedzi")[i].id.split("-")[2]
+                }
+                tab_odpowedzi.push(temp)
+            }
         }
-    })
+        /*console.log(temp)
+        console.log(tab_odpowedzi);*/
+        tablica_sprawdzonych_odpowiedzi.push(sprawdzanie_odpowiedzi(tab_odpowedzi));
+        console.log(tablica_sprawdzonych_odpowiedzi);
+        tab_odpowedzi = [];
+    });
+
 }
 
 function generowanie_pytan(){
-    let tab_odpowiedzi = [];
-     let tab_indexy = losowanie_indeksow();
+    
      let liczba = 0;
+
     $.getJSON('pytania.json', function(data) {
             let pytania = data.quiz;
 
@@ -85,11 +181,12 @@ function generowanie_pytan(){
             
             if(sprawdzenie_ilosci_odpowiedzi(pytanie.correct_answers.length)){
                 pytanie.options.forEach((opcja, i) => {
-
+                    
                     let input = document.createElement("input");
                     input.type = "radio";
+                    input.classList.add("odpowiedzi");
                     input.name = `odpowiedz-${index}`;
-                    input.id = `id-${index}-${i}`;
+                    input.id = `id-${pytanie.question_id}-${i}`;
                     input.value = opcja;
 
                     let label = document.createElement("label");
@@ -103,10 +200,12 @@ function generowanie_pytan(){
 
             }else{
                  pytanie.options.forEach((opcja, i) => {
+                
                     let input = document.createElement("input");
                     input.type = "checkbox";
+                    input.classList.add("odpowiedzi");
                     input.name = `odpowiedz-${index}`;
-                    input.id = `id-${index}-${i}`;
+                    input.id = `id-${pytanie.question_id}-${i}`;
                     input.value = opcja;
 
                     let label = document.createElement("label");
@@ -127,9 +226,10 @@ function generowanie_pytan(){
         });
 
         obsluga_button();
-        obsluga_input(tab_odpowiedzi);
+        obsluga_input();
     });
 }
+
 $(document).ready(function() {
     generowanie_pytan();
 });
