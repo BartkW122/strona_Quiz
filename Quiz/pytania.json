@@ -1,6 +1,7 @@
 {
   "quiz": [
     {
+      "question_id": 1,
       "question": "Co to jest jQuery?",
       "options": [
         "Biblioteka JavaScript ułatwiająca manipulację DOM",
@@ -11,6 +12,7 @@
       "correct_answers": [0]
     },
     {
+      "question_id": 2,
       "question": "Jaki jest poprawny sposób odwołania się do elementu o id='demo' w jQuery?",
       "options": [
         "$('#demo')",
@@ -21,6 +23,7 @@
       "correct_answers": [0]
     },
     {
+      "question_id": 3,
       "question": "Która metoda w jQuery służy do ukrywania elementów?",
       "options": [
         ".hide()",
@@ -31,6 +34,7 @@
       "correct_answers": [0]
     },
     {
+      "question_id": 4,
       "question": "Jak poprawnie dołączyć jQuery do strony?",
       "options": [
         "Za pomocą znacznika <script src='jquery.js'></script>",
@@ -41,6 +45,7 @@
       "correct_answers": [0]
     },
     {
+      "question_id": 5,
       "question": "Która metoda pozwala dodać klasę CSS do wybranego elementu?",
       "options": [
         ".addClass()",
@@ -51,6 +56,7 @@
       "correct_answers": [0]
     },
     {
+      "question_id": 6,
       "question": "Jak zapisać funkcję, która wykona się po pełnym załadowaniu dokumentu?",
       "options": [
         "$(document).ready(function(){ ... });",
@@ -61,6 +67,7 @@
       "correct_answers": [0,1]
     },
     {
+      "question_id": 7,
       "question": "Która metoda w jQuery służy do wykonywania żądania AJAX?",
       "options": [
         "$.ajax()",
@@ -71,6 +78,7 @@
       "correct_answers": [0,1,2]
     },
     {
+      "question_id": 8,
       "question": "Jak w jQuery ustawić tekst wewnątrz elementu?",
       "options": [
         ".html('tekst')",
@@ -81,6 +89,7 @@
       "correct_answers": [2,0]
     },
     {
+      "question_id": 9,
       "question": "Która metoda usuwa element z DOM?",
       "options": [
         ".remove()",
@@ -91,6 +100,7 @@
       "correct_answers": [0,2]
     },
     {
+      "question_id": 10,
       "question": "Do czego służy metoda .css() w jQuery?",
       "options": [
         "Do dodawania pliku CSS do strony",
@@ -101,6 +111,7 @@
       "correct_answers": [1]
     },
     {
+      "question_id": 11,
       "question": "Która metoda pozwala dodać nowy element HTML do innego elementu?",
       "options": [
         ".append()",
@@ -111,6 +122,7 @@
       "correct_answers": [0,3]
     },
     {
+      "question_id": 12,
       "question": "Jak sprawdzić, czy element posiada określoną klasę?",
       "options": [
         ".hasClass('nazwa')",
@@ -121,6 +133,7 @@
       "correct_answers": [0]
     },
     {
+      "question_id": 13,
       "question": "Która metoda służy do obsługi zdarzeń w jQuery?",
       "options": [
         ".on()",
@@ -131,6 +144,7 @@
       "correct_answers": [0,1]
     },
     {
+      "question_id": 14,
       "question": "Jak usunąć atrybut z elementu w jQuery?",
       "options": [
         ".removeAttr('atrybut')",
@@ -141,6 +155,7 @@
       "correct_answers": [0,2]
     },
     {
+      "question_id": 15,
       "question": "Która metoda w jQuery służy do animacji?",
       "options": [
         ".animate()",
@@ -151,6 +166,7 @@
       "correct_answers": [0,2,3]
     },
     {
+      "question_id": 16,
       "question": "Jak pobrać lub ustawić wartość pola input?",
       "options": [
         ".val()",
@@ -161,6 +177,7 @@
       "correct_answers": [0]
     },
     {
+      "question_id": 17,
       "question": "Która metoda zatrzymuje bieżącą animację w jQuery?",
       "options": [
         ".pause()",
@@ -171,6 +188,7 @@
       "correct_answers": [1]
     },
     {
+      "question_id": 18,
       "question": "Czym różni się .prop() od .attr()?",
       "options": [
         ".prop() odczytuje i ustawia właściwości DOM, a .attr() atrybuty HTML",
@@ -181,6 +199,7 @@
       "correct_answers": [0]
     },
     {
+      "question_id": 19,
       "question": "Jak wybrać wszystkie elementy z klasą 'active' wewnątrz elementu div?",
       "options": [
         "$('div .active')",
@@ -191,6 +210,7 @@
       "correct_answers": [0,3]
     },
     {
+      "question_id": 20,
       "question": "Które z poniższych funkcji służą do efektów zanikania w jQuery?",
       "options": [
         ".fadeIn()",
