@@ -14,16 +14,6 @@ function losowanie_indeksow() {
     return losowane_indexy;
 }
 
-
-function sprawdzenie_ilosci_odpowiedzi(dlugosc) {
-    if (dlugosc === 1) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
 function przyrownanie_tablic(tab1, tab2) {
     if (tab1.length !== tab2.length) {
         return false;
@@ -103,7 +93,7 @@ function generowanie_pytan() {
             h3.textContent = (liczba + 1) + ", " + pytanie.question;
             div.appendChild(h3);
 
-            if (sprawdzenie_ilosci_odpowiedzi(pytanie.correct_answers.length) === true) {
+            if (pytanie.correct_answers.length == 1) {
                 for (let i = 0; i < pytanie.options.length; i++) {
                     let input = document.createElement("input");
                     input.type = "radio";
