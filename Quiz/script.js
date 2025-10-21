@@ -1,238 +1,198 @@
-function losowanie_indeksow() {
-  let losowane_indexy = [];
-
-  while (losowane_indexy.length < 20) {
-    let liczba = Math.floor(Math.random() * 20); 
-    if (!losowane_indexy.includes(liczba)) {
-      losowane_indexy.push(liczba);
-    }
-  }
-
-  return losowane_indexy;
-}
 
 let tab_indexy = losowanie_indeksow();
+let tablica_sprawdzonych_odpowiedzi = [];
 
-function sprawdzenie_ilosci_odpowiedzi(dlugosc){
-    if(dlugosc == 1){
-        return true
-    }
-    if(dlugosc > 1){
-        return false
-    }
-}
 
-function  obsluga_button(){
-
-    let ilosc_klik = 1;
-    $("button.next").on("click",function(){
-        console.log(ilosc_klik);
-        if(ilosc_klik<20){
-
-            ilosc_klik ++;
-
-        }else{
-
-            ilosc_klik = 1;
-
-            alert("koniec")
-            let btn_powtorz = document.createElement("button");
-
-            btn_powtorz.textContent = "Powtorz";
-            btn_powtorz.id = "powtorz";
-
-            $("div#conatiner").append(btn_powtorz);
-
-            $("button#powtorz").on("click",function(){
-                
-                    $("div#pytania").empty();
-                    $(this).remove();
-                    generowanie_pytan();
-
-            })
-
+function losowanie_indeksow() {
+    let losowane_indexy = [];
+    while (losowane_indexy.length < 20) {
+        let liczba = Math.floor(Math.random() * 20); 
+        if (!losowane_indexy.includes(liczba)) {
+            losowane_indexy.push(liczba);
         }
-        //console.log($(this).parent().hide())
-    })
+    }
+    return losowane_indexy;
 }
-function przyrownanie_tablic(tab1,tab2){
+
+
+function sprawdzenie_ilosci_odpowiedzi(dlugosc) {
+    if (dlugosc === 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+function przyrownanie_tablic(tab1, tab2) {
     if (tab1.length !== tab2.length) {
         return false;
     }
-
-    return tab1.every((value, index) => {
-        return value === tab2[index];
-    });
+    for (let i = 0; i < tab1.length; i++) {
+        if (tab1[i] !== tab2[i]) {
+            return false;
+        }
+    }
+    return true;
 }
-function sprawdzanie_odpowiedzi(tab_id){
-        $.getJSON('pytania.json', function(data) {
+
+
+function sprawdzanie_odpowiedzi(tab_id) {
+    let wynik = null;
+
+    $.ajax({
+        url: 'pytania.json',
+        dataType: 'json',
+        async: false,
+        success: function(data) {
             let pytania = data.quiz;
             let szukane_question_id;
-            let wynik = null;
 
-            if(tab_id.length > 1){
+            if (tab_id.length > 1) {
                 let tab_ids = [];
-
-                tab_id.forEach(item=>{
-                    szukane_question_id = parseInt(item.key);
-                    tab_ids.push(parseInt(item.value))
-                })  
-
-                 pytania.forEach(item=>{
-                    if(item.question_id == szukane_question_id){
-                        console.log(item);
-                        console.log("answer =>"+item.correct_answers);
-                        console.log("tab =>"+tab_ids)
-
-                        if(przyrownanie_tablic(item.correct_answers,tab_ids)){
-                            wynik = {
-                                "question_id":szukane_question_id,
-                                "zgodnosc":true
-                            };
-                        }else{
-                            wynik = {
-                                "question_id":szukane_question_id,
-                                "zgodnosc":false
-                            };
-                        }
-
-                    }
-                })
-                
-            }else{
-                let sprawdzana_odp;
-
-                tab_id.forEach(item=>{
-
-                    szukane_question_id = parseInt(item.key);
-                    sprawdzana_odp = parseInt(item.value);
-                    
-                })
-
-                pytania.forEach(item=>{
-                    if(item.question_id == szukane_question_id){
-                        console.log(item);
-                        console.log(item.correct_answers);
-                        if(item.correct_answers == sprawdzana_odp){
-                            wynik = {
-                                "question_id":szukane_question_id,
-                                "zgodnosc":true
-                            };
-                        }else{
-                            wynik = {
-                                "question_id":szukane_question_id,
-                                "zgodnosc":false
-                            };
-                        }
-                    }
-                })
-                
-            }
-            
-        
-    });
-    return wynik;
-    
-}
-
-function obsluga_input(){
-    let tab_odpowedzi=[];
-    let tablica_sprawdzonych_odpowiedzi = [];
-    let temp;
-    $("button.next").on("click",function(){
-        for(let i  = 0;i<4;i++){
-            if($(this).parent().children(".odpowiedzi")[i].checked){
-                console.log($(this).parent().children(".odpowiedzi")[i]);
-                temp ={
-                    "key":$(this).parent().children(".odpowiedzi")[i].id.split("-")[1],
-                    "value":$(this).parent().children(".odpowiedzi")[i].id.split("-")[2]
+                for (let i = 0; i < tab_id.length; i++) {
+                    szukane_question_id = parseInt(tab_id[i].key);
+                    tab_ids.push(parseInt(tab_id[i].value));
                 }
-                tab_odpowedzi.push(temp)
+                for (let i = 0; i < pytania.length; i++) {
+                    if (pytania[i].question_id == szukane_question_id) {
+                        if (przyrownanie_tablic(pytania[i].correct_answers, tab_ids)) {
+                            wynik = {"zgodnosc": true};
+                        } else {
+                            wynik = {"zgodnosc": false};
+                        }
+                    }
+                }
+            } else {
+                let sprawdzana_odp;
+                for (let i = 0; i < tab_id.length; i++) {
+                    szukane_question_id = parseInt(tab_id[i].key);
+                    sprawdzana_odp = parseInt(tab_id[i].value);
+                }
+                for (let i = 0; i < pytania.length; i++) {
+                    if (pytania[i].question_id == szukane_question_id) {
+                        if (pytania[i].correct_answers == sprawdzana_odp) {
+                            wynik = {"zgodnosc": true};
+                        } else {
+                            wynik = {"zgodnosc": false};
+                        }
+                    }
+                }
             }
         }
-        /*console.log(temp)
-        console.log(tab_odpowedzi);*/
-        tablica_sprawdzonych_odpowiedzi.push(sprawdzanie_odpowiedzi(tab_odpowedzi));
-        console.log(tablica_sprawdzonych_odpowiedzi);
-        tab_odpowedzi = [];
     });
 
+    return wynik;
 }
 
-function generowanie_pytan(){
-    
-     let liczba = 0;
+
+function generowanie_pytan() {
+    let liczba = 0;
 
     $.getJSON('pytania.json', function(data) {
-            let pytania = data.quiz;
+        let pytania = data.quiz;
 
-            tab_indexy.forEach(index => {
+        for (let j = 0; j < tab_indexy.length; j++) {
+            let index = tab_indexy[j];
             let pytanie = pytania[index];
-            
+
             let div = document.createElement("div");
+            div.style.display = "none";
+
             let h3 = document.createElement("h3");
-            let button = document.createElement("button");
-            
-            button.textContent = "Dalej";
-            button.classList.add("next");
-            liczba++;
-            h3.textContent = `${liczba}, ${pytanie.question}`
-            
+            h3.textContent = (liczba + 1) + ", " + pytanie.question;
             div.appendChild(h3);
-            
-            if(sprawdzenie_ilosci_odpowiedzi(pytanie.correct_answers.length)){
-                pytanie.options.forEach((opcja, i) => {
-                    
+
+            if (sprawdzenie_ilosci_odpowiedzi(pytanie.correct_answers.length) === true) {
+                for (let i = 0; i < pytanie.options.length; i++) {
                     let input = document.createElement("input");
                     input.type = "radio";
                     input.classList.add("odpowiedzi");
-                    input.name = `odpowiedz-${index}`;
-                    input.id = `id-${pytanie.question_id}-${i}`;
-                    input.value = opcja;
+                    input.name = "odpowiedz-" + index;
+                    input.id = "id-" + pytanie.question_id + "-" + i;
+                    input.value = i;
 
                     let label = document.createElement("label");
                     label.setAttribute("for", input.id);
-                    label.textContent = opcja;
+                    label.textContent = pytanie.options[i];
 
                     div.appendChild(input);
                     div.appendChild(label);
                     div.appendChild(document.createElement("br"));
-                });
-
-            }else{
-                 pytanie.options.forEach((opcja, i) => {
-                
+                }
+            } else {
+                for (let i = 0; i < pytanie.options.length; i++) {
                     let input = document.createElement("input");
                     input.type = "checkbox";
                     input.classList.add("odpowiedzi");
-                    input.name = `odpowiedz-${index}`;
-                    input.id = `id-${pytanie.question_id}-${i}`;
-                    input.value = opcja;
+                    input.name = "odpowiedz-" + index;
+                    input.id = "id-" + pytanie.question_id + "-" + i;
+                    input.value = i;
 
                     let label = document.createElement("label");
                     label.setAttribute("for", input.id);
-                    label.textContent = opcja;
+                    label.textContent = pytanie.options[i];
 
                     div.appendChild(input);
                     div.appendChild(label);
                     div.appendChild(document.createElement("br"));
-                });
-
+                }
             }
 
-            div.appendChild(button)
-    
-            $("div#pytania").append(div)
+            let button = document.createElement("button");
+            button.textContent = "Dalej";
+            button.classList.add("next");
+            div.appendChild(button);
 
+            $("div#pytania").append(div);
+            liczba++;
+        }
+
+        let currentIndex = 0;
+        $("div#pytania div").eq(currentIndex).show();
+
+        $("button.next").on("click", function() {
+            let tab_odpowedzi = [];
+
+            $(this).parent().children(".odpowiedzi").each(function() {
+                if (this.checked) {
+                    tab_odpowedzi.push({"key": this.id.split("-")[1], "value": this.id.split("-")[2]});
+                }
+            });
+
+            tablica_sprawdzonych_odpowiedzi.push(sprawdzanie_odpowiedzi(tab_odpowedzi));
+
+            $(this).parent().hide();
+            currentIndex++;
+
+            if (currentIndex < tab_indexy.length) {
+                $("div#pytania div").eq(currentIndex).fadeIn();
+            } else {
+                let poprawne = 0;
+                for (let i = 0; i < tablica_sprawdzonych_odpowiedzi.length; i++) {
+                    if (tablica_sprawdzonych_odpowiedzi[i].zgodnosc === true) {
+                        poprawne++;
+                    }
+                }
+
+                $("div#pytania").html("<h2>Twój wynik: " + poprawne + " / " + tablica_sprawdzonych_odpowiedzi.length + "</h2>");
+
+                let btn_powtorz = document.createElement("button");
+                btn_powtorz.textContent = "Powtórz";
+                btn_powtorz.id = "powtorz";
+                $("div#pytania").append(btn_powtorz);
+
+                $("button#powtorz").on("click", function() {
+                    $("div#pytania").empty();
+                    tablica_sprawdzonych_odpowiedzi = [];
+                    tab_indexy = losowanie_indeksow();
+                    generowanie_pytan();
+                });
+            }
         });
-
-        obsluga_button();
-        obsluga_input();
     });
 }
 
 $(document).ready(function() {
     generowanie_pytan();
 });
-
-
