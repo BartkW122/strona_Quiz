@@ -65,8 +65,7 @@ function przyrownanie_tablic(tab1,tab2){
     });
 }
 function sprawdzanie_odpowiedzi(tab_id){
-
-    $.getJSON('pytania.json', function(data) {
+        $.getJSON('pytania.json', function(data) {
             let pytania = data.quiz;
             let szukane_question_id;
             let wynik = null;
@@ -77,7 +76,7 @@ function sprawdzanie_odpowiedzi(tab_id){
                 tab_id.forEach(item=>{
                     szukane_question_id = parseInt(item.key);
                     tab_ids.push(parseInt(item.value))
-                })
+                })  
 
                  pytania.forEach(item=>{
                     if(item.question_id == szukane_question_id){
@@ -87,13 +86,13 @@ function sprawdzanie_odpowiedzi(tab_id){
 
                         if(przyrownanie_tablic(item.correct_answers,tab_ids)){
                             wynik = {
-                                question_id:szukane_question_id,
-                                zgodnosc:true
+                                "question_id":szukane_question_id,
+                                "zgodnosc":true
                             };
                         }else{
                             wynik = {
-                                question_id:szukane_question_id,
-                                zgodnosc:false
+                                "question_id":szukane_question_id,
+                                "zgodnosc":false
                             };
                         }
 
@@ -116,13 +115,13 @@ function sprawdzanie_odpowiedzi(tab_id){
                         console.log(item.correct_answers);
                         if(item.correct_answers == sprawdzana_odp){
                             wynik = {
-                                question_id:szukane_question_id,
-                                zgodnosc:true
+                                "question_id":szukane_question_id,
+                                "zgodnosc":true
                             };
                         }else{
                             wynik = {
-                                question_id:szukane_question_id,
-                                zgodnosc:false
+                                "question_id":szukane_question_id,
+                                "zgodnosc":false
                             };
                         }
                     }
@@ -130,8 +129,10 @@ function sprawdzanie_odpowiedzi(tab_id){
                 
             }
             
-        return wynik;
+        
     });
+    return wynik;
+    
 }
 
 function obsluga_input(){
